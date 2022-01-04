@@ -81,6 +81,27 @@ export function useAllStoriesQuery(
     ...options,
   });
 }
+export const StoryByIdDocument = gql`
+  query StoryById($id: ID!) {
+    story(id: $id) {
+      id
+      title
+      summary
+      text
+      author
+      bookmarkId
+    }
+  }
+`;
+
+export function useStoryByIdQuery(
+  options: Omit<Urql.UseQueryArgs<StoryByIdQueryVariables>, 'query'> = {},
+) {
+  return Urql.useQuery<StoryByIdQuery>({
+    query: StoryByIdDocument,
+    ...options,
+  });
+}
 export type AllStoriesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllStoriesQuery = {
@@ -97,6 +118,26 @@ export type AllStoriesQuery = {
     | undefined;
 };
 
+export type StoryByIdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type StoryByIdQuery = {
+  __typename?: 'Query';
+  story?:
+    | {
+        __typename?: 'Story';
+        id: string;
+        title: string;
+        summary: string;
+        text?: string | null | undefined;
+        author?: string | null | undefined;
+        bookmarkId?: string | null | undefined;
+      }
+    | null
+    | undefined;
+};
+
 export const AllStories = gql`
   query AllStories {
     stories {
@@ -104,6 +145,18 @@ export const AllStories = gql`
       title
       author
       summary
+    }
+  }
+`;
+export const StoryById = gql`
+  query StoryById($id: ID!) {
+    story(id: $id) {
+      id
+      title
+      summary
+      text
+      author
+      bookmarkId
     }
   }
 `;

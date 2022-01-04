@@ -1,0 +1,10 @@
+query StoryById($id: ID!) {
+  story(id: $id) {
+    id
+    title
+    summary
+    text
+    author
+    bookmarkId
+  }
+}
