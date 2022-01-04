@@ -62,15 +62,20 @@ export type Story = {
   title: Scalars['String'];
 };
 
+export const StorySummaryFieldsFragmentDoc = gql`
+  fragment StorySummaryFields on Story {
+    summary
+    title
+    id
+  }
+`;
 export const AllStoriesDocument = gql`
   query AllStories {
     stories {
-      id
-      title
-      author
-      summary
+      ...StorySummaryFields
     }
   }
+  ${StorySummaryFieldsFragmentDoc}
 `;
 
 export function useAllStoriesQuery(
@@ -102,6 +107,13 @@ export function useStoryByIdQuery(
     ...options,
   });
 }
+export type StorySummaryFieldsFragment = {
+  __typename?: 'Story';
+  summary: string;
+  title: string;
+  id: string;
+};
+
 export type AllStoriesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllStoriesQuery = {
@@ -109,10 +121,9 @@ export type AllStoriesQuery = {
   stories?:
     | Array<{
         __typename?: 'Story';
-        id: string;
-        title: string;
-        author?: string | null | undefined;
         summary: string;
+        title: string;
+        id: string;
       }>
     | null
     | undefined;
@@ -138,15 +149,20 @@ export type StoryByIdQuery = {
     | undefined;
 };
 
+export const StorySummaryFields = gql`
+  fragment StorySummaryFields on Story {
+    summary
+    title
+    id
+  }
+`;
 export const AllStories = gql`
   query AllStories {
     stories {
-      id
-      title
-      author
-      summary
+      ...StorySummaryFields
     }
   }
+  ${StorySummaryFields}
 `;
 export const StoryById = gql`
   query StoryById($id: ID!) {

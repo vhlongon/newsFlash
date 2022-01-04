@@ -1,8 +1,5 @@
 query AllStories {
   stories {
-    id
-    title
-    author
-    summary
+    ...StorySummaryFields
   }
 }
