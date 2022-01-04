@@ -41,11 +41,16 @@ const StoryDetailsModalScreen = () => {
       </View>
     );
   }
+
   return (
     <ScrollView style={styles.scrollView}>
       <Text style={styles.summary}>{data.story?.summary}</Text>
       <View style={styles.divider} />
-      <Text style={styles.text}>{data.story?.text}</Text>
+      {data.story?.text ? (
+        <Text style={styles.text}>{data.story?.text}</Text>
+      ) : (
+        <ActivityIndicator color="grey" size={50} />
+      )}
       <View style={styles.divider} />
       <Text style={styles.author}>{data.story?.author}</Text>
     </ScrollView>
