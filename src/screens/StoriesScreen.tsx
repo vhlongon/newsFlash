@@ -5,11 +5,17 @@ import {
   ActivityIndicator,
   FlatList,
   StyleSheet,
+  Pressable,
 } from 'react-native';
-import { useAllStoriesQuery } from './graphql/generated/graphql-types';
+import { useNavigation } from '@react-navigation/native';
+import { useAllStoriesQuery } from '../graphql/generated/graphql-types';
+import { RootStackParamsList } from '../types';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const Stories = () => {
+const StoriesScreen = () => {
   const [{ data, error, fetching }] = useAllStoriesQuery();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamsList>>();
 
   if (fetching) {
     return (
@@ -43,10 +49,16 @@ const Stories = () => {
       keyExtractor={item => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       renderItem={({ item }) => (
-        <View>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('StoryDetailsModal', {
+              id: item.id,
+              title: item.title,
+            });
+          }}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.summary}>{item.summary}</Text>
-        </View>
+        </Pressable>
       )}
     />
   );
@@ -60,13 +72,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flatListContainer: {
-    paddingTop: 100,
-    paddingBottom: 20,
+    paddingVertical: 20,
   },
   flatList: {
     paddingHorizontal: 20,
   },
   title: {
+    color: 'black',
     fontSize: 24,
     fontWeight: '400',
     textTransform: 'uppercase',
@@ -84,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Stories;
+export default StoriesScreen;

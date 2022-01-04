@@ -1,27 +1,24 @@
 import React from 'react';
-import { SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
 import { createClient, Provider as UrqlProvider } from 'urql';
-import Stories from './Stories';
+import { Platform } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import RootNavigator from './navigation/RootNavigator';
 
-const client = createClient({ url: 'http://localhost:3000/graphql' });
+const url =
+  Platform.OS === 'android'
+    ? 'http://10.0.2.2:3000/graphql'
+    : 'http://localhost:3000/graphql';
+
+const client = createClient({ url });
 
 const App = () => {
   return (
     <UrqlProvider value={client}>
-      <StatusBar hidden />
-      <View style={styles.container}>
-        <Stories />
-      </View>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
     </UrqlProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-  },
-});
 
 export default App;
