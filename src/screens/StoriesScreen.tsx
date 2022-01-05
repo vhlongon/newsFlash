@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,21 @@ import Story from '../components/Story';
 import { useAllStoriesQuery } from '../graphql/generated/graphql-types';
 
 const StoriesScreen = () => {
-  const [{ data, error, fetching }] = useAllStoriesQuery();
+  const [{ data, error, fetching }, refreshingStories] = useAllStoriesQuery();
+  const [isRefreshing, setisRefreshing] = useState(false);
 
-  if (fetching) {
+  const handleRefresh = () => {
+    setisRefreshing(true);
+    refreshingStories({ requestPolicy: 'network-only' });
+  };
+
+  useEffect(() => {
+    if (!fetching) {
+      setisRefreshing(false);
+    }
+  }, [fetching]);
+
+  if (fetching && !isRefreshing) {
     return (
       <View style={styles.container}>
         <ActivityIndicator color="grey" />
@@ -38,6 +50,8 @@ const StoriesScreen = () => {
 
   return (
     <FlatList
+      refreshing={isRefreshing}
+      onRefresh={handleRefresh}
       contentContainerStyle={styles.flatListContainer}
       style={styles.flatList}
       data={data.stories}
