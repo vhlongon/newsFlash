@@ -1,0 +1,8 @@
+query AllBookmarks {
+  bookmarks {
+    id
+    story {
+      ...StorySummaryFields
+    }
+  }
+}

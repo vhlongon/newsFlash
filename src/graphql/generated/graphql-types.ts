@@ -69,6 +69,26 @@ export const StorySummaryFieldsFragmentDoc = gql`
     id
   }
 `;
+export const AllBookmarksDocument = gql`
+  query AllBookmarks {
+    bookmarks {
+      id
+      story {
+        ...StorySummaryFields
+      }
+    }
+  }
+  ${StorySummaryFieldsFragmentDoc}
+`;
+
+export function useAllBookmarksQuery(
+  options: Omit<Urql.UseQueryArgs<AllBookmarksQueryVariables>, 'query'> = {},
+) {
+  return Urql.useQuery<AllBookmarksQuery>({
+    query: AllBookmarksDocument,
+    ...options,
+  });
+}
 export const AllStoriesDocument = gql`
   query AllStories {
     stories {
@@ -107,6 +127,25 @@ export function useStoryByIdQuery(
     ...options,
   });
 }
+export type AllBookmarksQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AllBookmarksQuery = {
+  __typename?: 'Query';
+  bookmarks?:
+    | Array<{
+        __typename?: 'Bookmark';
+        id: string;
+        story: {
+          __typename?: 'Story';
+          summary: string;
+          title: string;
+          id: string;
+        };
+      }>
+    | null
+    | undefined;
+};
+
 export type StorySummaryFieldsFragment = {
   __typename?: 'Story';
   summary: string;
@@ -155,6 +194,17 @@ export const StorySummaryFields = gql`
     title
     id
   }
+`;
+export const AllBookmarks = gql`
+  query AllBookmarks {
+    bookmarks {
+      id
+      story {
+        ...StorySummaryFields
+      }
+    }
+  }
+  ${StorySummaryFields}
 `;
 export const AllStories = gql`
   query AllStories {
