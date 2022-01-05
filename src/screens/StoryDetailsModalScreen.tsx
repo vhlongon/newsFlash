@@ -21,7 +21,7 @@ const StoryDetailsModalScreen = () => {
   if (fetching) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color="grey" />
+        <ActivityIndicator color="darkgrey" />
       </View>
     );
   }
@@ -49,7 +49,7 @@ const StoryDetailsModalScreen = () => {
       {data.story?.text ? (
         <Text style={styles.text}>{data.story?.text}</Text>
       ) : (
-        <ActivityIndicator color="grey" size={50} />
+        <ActivityIndicator color="darkgrey" size={50} />
       )}
       <View style={styles.divider} />
       <Text style={styles.author}>{data.story?.author}</Text>

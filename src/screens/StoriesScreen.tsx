@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,26 +8,21 @@ import {
 } from 'react-native';
 import Story from '../components/Story';
 import { useAllStoriesQuery } from '../graphql/generated/graphql-types';
+import { useWithRefresh } from '../hooks/useWithRefresh';
 
 const StoriesScreen = () => {
-  const [{ data, error, fetching }, refreshingStories] = useAllStoriesQuery();
-  const [isRefreshing, setisRefreshing] = useState(false);
+  const [{ data, error, fetching }, refreshStories] = useAllStoriesQuery();
+  const { isRefreshing, setisRefreshing } = useWithRefresh(fetching);
 
   const handleRefresh = () => {
     setisRefreshing(true);
-    refreshingStories({ requestPolicy: 'network-only' });
+    refreshStories({ requestPolicy: 'network-only' });
   };
-
-  useEffect(() => {
-    if (!fetching) {
-      setisRefreshing(false);
-    }
-  }, [fetching]);
 
   if (fetching && !isRefreshing) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color="grey" />
+        <ActivityIndicator color="darkgrey" />
       </View>
     );
   }
@@ -76,6 +71,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     paddingHorizontal: 20,
+    backgroundColor: '#fff',
   },
   separator: {
     height: 1,

@@ -8,14 +8,21 @@ import {
 } from 'react-native';
 import Story from '../components/Story';
 import { useAllBookmarksQuery } from '../graphql/generated/graphql-types';
+import { useWithRefresh } from '../hooks/useWithRefresh';
 
 const BookmarksScreen = () => {
-  const [{ data, fetching, error }] = useAllBookmarksQuery();
+  const [{ data, fetching, error }, refreshBoookmarks] = useAllBookmarksQuery();
+  const { isRefreshing, setisRefreshing } = useWithRefresh(fetching);
 
-  if (fetching) {
+  const handleRefresh = () => {
+    setisRefreshing(true);
+    refreshBoookmarks({ requestPolicy: 'network-only' });
+  };
+
+  if (fetching && !isRefreshing) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color="grey" />
+        <ActivityIndicator color="darkgrey" />
       </View>
     );
   }
@@ -41,6 +48,8 @@ const BookmarksScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
         contentContainerStyle={styles.flatListContainer}
         style={styles.flatList}
         data={data.bookmarks}
@@ -67,9 +76,11 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     paddingVertical: 20,
+    backgroundColor: '#fff',
   },
   flatList: {
     paddingHorizontal: 20,
+    backgroundColor: '#fff',
   },
   separator: {
     height: 1,
