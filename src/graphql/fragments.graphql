@@ -4,3 +4,8 @@ fragment StorySummaryFields on Story {
   id
   bookmarkId
 }
+
+fragment _ on Story {
+  id
+  bookmarkId
+}

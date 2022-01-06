@@ -53,7 +53,7 @@ const BookmarksScreen = () => {
         data={data.bookmarks}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        renderItem={({ item }) => <Story {...item.story} />}
+        renderItem={({ item }) => <Story {...item.story} cta="remove" />}
       />
     </View>
   );

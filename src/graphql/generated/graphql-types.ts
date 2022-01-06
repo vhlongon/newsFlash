@@ -70,6 +70,12 @@ export const StorySummaryFieldsFragmentDoc = gql`
     bookmarkId
   }
 `;
+export const _FragmentDoc = gql`
+  fragment _ on Story {
+    id
+    bookmarkId
+  }
+`;
 export const AddBookmarkDocument = gql`
   mutation AddBookmark($storyId: ID!) {
     addBookmark(storyId: $storyId) {
@@ -106,6 +112,18 @@ export function useAllBookmarksQuery(
     query: AllBookmarksDocument,
     ...options,
   });
+}
+export const RemoveBookmarkDocument = gql`
+  mutation RemoveBookmark($bookmarkId: ID!) {
+    removeBookmark(bookmarkId: $bookmarkId)
+  }
+`;
+
+export function useRemoveBookmarkMutation() {
+  return Urql.useMutation<
+    RemoveBookmarkMutation,
+    RemoveBookmarkMutationVariables
+  >(RemoveBookmarkDocument);
 }
 export const AllStoriesDocument = gql`
   query AllStories {
@@ -195,6 +213,21 @@ export type StorySummaryFieldsFragment = {
   bookmarkId?: string | null | undefined;
 };
 
+export type _Fragment = {
+  __typename?: 'Story';
+  id: string;
+  bookmarkId?: string | null | undefined;
+};
+
+export type RemoveBookmarkMutationVariables = Exact<{
+  bookmarkId: Scalars['ID'];
+}>;
+
+export type RemoveBookmarkMutation = {
+  __typename?: 'Mutation';
+  removeBookmark?: boolean | null | undefined;
+};
+
 export type AllStoriesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllStoriesQuery = {
@@ -239,6 +272,12 @@ export const StorySummaryFields = gql`
     bookmarkId
   }
 `;
+export const _ = gql`
+  fragment _ on Story {
+    id
+    bookmarkId
+  }
+`;
 export const AddBookmark = gql`
   mutation AddBookmark($storyId: ID!) {
     addBookmark(storyId: $storyId) {
@@ -260,6 +299,11 @@ export const AllBookmarks = gql`
     }
   }
   ${StorySummaryFields}
+`;
+export const RemoveBookmark = gql`
+  mutation RemoveBookmark($bookmarkId: ID!) {
+    removeBookmark(bookmarkId: $bookmarkId)
+  }
 `;
 export const AllStories = gql`
   query AllStories {

@@ -16,6 +16,9 @@ import {
   AddBookmarkMutationVariables,
   AllBookmarks,
   AllBookmarksQuery,
+  RemoveBookmarkMutation,
+  RemoveBookmarkMutationVariables,
+  _,
 } from './graphql/generated/graphql-types';
 
 const url =
@@ -40,16 +43,48 @@ const clientCache = cacheExchange({
         cache,
       ) => {
         if (result.addBookmark) {
-          // TODO update allBookmarks query in the cache when we add a bookmark to a story
+          // update allBookmarks query in the cache when we add a bookmark to a story
           cache.updateQuery(
             { query: AllBookmarks },
             (data: AllBookmarksQuery | null) => {
-              if (data && data.bookmarks && result.addBookmark) {
+              if (data?.bookmarks && result.addBookmark) {
                 data.bookmarks.push(result.addBookmark);
               }
               return data;
             },
           );
+        }
+      },
+      removeBookmark: (
+        result: RemoveBookmarkMutation,
+        args: RemoveBookmarkMutationVariables,
+        cache,
+      ) => {
+        if (result.removeBookmark) {
+          let storyId: undefined | string;
+          // update allBookmarks query in the cache when we remove a bookmark from a story
+          cache.updateQuery(
+            { query: AllBookmarks },
+            (data: AllBookmarksQuery | null) => {
+              if (data?.bookmarks) {
+                // find the story id of the story that we want to remove the bookmark from
+                storyId = data.bookmarks.find(
+                  item => item.id === args.bookmarkId,
+                )?.story.id;
+                data.bookmarks = data.bookmarks.filter(
+                  item => item.id !== args.bookmarkId,
+                );
+              }
+              return data;
+            },
+          );
+
+          if (storyId) {
+            cache.writeFragment(_, {
+              id: storyId,
+              bookmarkId: null,
+            });
+          }
         }
       },
     },

@@ -52,7 +52,7 @@ const StoriesScreen = () => {
       data={data.stories}
       keyExtractor={item => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      renderItem={({ item }) => <Story {...item} />}
+      renderItem={({ item }) => <Story {...item} cta="add" />}
     />
   );
 };

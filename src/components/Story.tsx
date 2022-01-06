@@ -11,20 +11,22 @@ import {
 import {
   StorySummaryFieldsFragment,
   useAddBookmarkMutation,
+  useRemoveBookmarkMutation,
 } from '../graphql/generated/graphql-types';
 import { RootStackParamsList } from '../types';
 
-const Story = ({
-  id,
-  title,
-  summary,
-  bookmarkId,
-}: StorySummaryFieldsFragment) => {
+interface Props extends StorySummaryFieldsFragment {
+  cta: 'add' | 'remove';
+}
+const Story = ({ id, title, summary, bookmarkId, cta }: Props) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamsList>>();
 
   const [{ fetching: isAddingBookmark }, addBookmark] =
     useAddBookmarkMutation();
+
+  const [{ fetching: isRemovingBookmark }, removeBookmark] =
+    useRemoveBookmarkMutation();
 
   return (
     <Pressable
@@ -38,7 +40,7 @@ const Story = ({
         <Text style={styles.title}>
           {title} {bookmarkId ? '🔖' : ''}
         </Text>
-        {!bookmarkId && !isAddingBookmark && (
+        {!bookmarkId && !isAddingBookmark && cta === 'add' && (
           <Pressable
             onPress={() => {
               addBookmark({ storyId: id });
@@ -46,7 +48,16 @@ const Story = ({
             <Text>Add bookmark</Text>
           </Pressable>
         )}
-        {isAddingBookmark && <ActivityIndicator color="indigo" />}
+        {bookmarkId && !isRemovingBookmark && cta === 'remove' && (
+          <Pressable
+            onPress={() => {
+              removeBookmark({ bookmarkId });
+            }}>
+            <Text>Remove bookmark</Text>
+          </Pressable>
+        )}
+        {isAddingBookmark ||
+          (isRemovingBookmark && <ActivityIndicator color="indigo" />)}
       </View>
       <Text style={styles.summary}>{summary}</Text>
     </Pressable>
