@@ -5,7 +5,7 @@ import {
   fetchExchange,
   Provider as UrqlProvider,
 } from 'urql';
-import { Platform } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import RootNavigator from './navigation/RootNavigator';
 import { cacheExchange } from '@urql/exchange-graphcache';
@@ -20,7 +20,8 @@ import {
   RemoveBookmarkMutationVariables,
   StoryBookMarkFragment,
 } from './graphql/generated/graphql-types';
-
+import { useNetInfo } from '@react-native-community/netinfo';
+import AppOfflinePage from './components/AppOfflinePage';
 const url =
   Platform.OS === 'android'
     ? 'http://192.168.50.217:3000/graphql'
@@ -97,8 +98,15 @@ const client = createClient({
 });
 
 const App = () => {
+  const { isConnected } = useNetInfo();
+
+  if (isConnected === false) {
+    return <AppOfflinePage />;
+  }
+
   return (
     <UrqlProvider value={client}>
+      <StatusBar hidden />
       <NavigationContainer>
         <RootNavigator />
       </NavigationContainer>

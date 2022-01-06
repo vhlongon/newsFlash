@@ -45,7 +45,7 @@ const Story = ({ id, title, summary, bookmarkId, cta }: Props) => {
             onPress={() => {
               addBookmark({ storyId: id });
             }}>
-            <Text>Add bookmark</Text>
+            <Text style={styles.cta}>Add </Text>
           </Pressable>
         )}
         {bookmarkId && !isRemovingBookmark && cta === 'remove' && (
@@ -53,11 +53,12 @@ const Story = ({ id, title, summary, bookmarkId, cta }: Props) => {
             onPress={() => {
               removeBookmark({ bookmarkId });
             }}>
-            <Text>Remove bookmark</Text>
+            <Text style={styles.cta}>Remove</Text>
           </Pressable>
         )}
-        {isAddingBookmark ||
-          (isRemovingBookmark && <ActivityIndicator color="indigo" />)}
+        {(isAddingBookmark || isRemovingBookmark) && (
+          <ActivityIndicator color="indigo" />
+        )}
       </View>
       <Text style={styles.summary}>{summary}</Text>
     </Pressable>
@@ -70,6 +71,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+  },
+  cta: {
+    color: 'black',
   },
   title: {
     color: 'black',
