@@ -30,7 +30,7 @@ const BookmarksScreen = () => {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text>{error.message}</Text>
+        <Text style={styles.errorText}>{error.message}</Text>
       </View>
     );
   }
@@ -38,7 +38,7 @@ const BookmarksScreen = () => {
   if (!data || data?.bookmarks?.length === 0) {
     return (
       <View style={styles.container}>
-        <Text>No bookmarks</Text>
+        <Text style={styles.text}>No bookmarks</Text>
       </View>
     );
   }
@@ -71,6 +71,12 @@ const styles = StyleSheet.create({
   flatList: {
     paddingHorizontal: 20,
     backgroundColor: '#fff',
+  },
+  text: {
+    color: 'black',
+  },
+  errorText: {
+    color: 'red',
   },
   separator: {
     height: 1,

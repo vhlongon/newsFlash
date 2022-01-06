@@ -9,14 +9,16 @@ import {
 } from 'react-native';
 import { useStoryByIdQuery } from '../graphql/generated/graphql-types';
 import { RootStackParamsList } from '../types';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const StoryDetailsModalScreen = () => {
   const { params } =
     useRoute<RouteProp<RootStackParamsList, 'StoryDetailsModal'>>();
-
   const [{ data, fetching, error }] = useStoryByIdQuery({
     variables: { id: params.id },
   });
+  const { isConnected } = useNetInfo();
 
   if (fetching) {
     return (
@@ -44,15 +46,28 @@ const StoryDetailsModalScreen = () => {
 
   return (
     <ScrollView style={styles.scrollView}>
-      <Text style={styles.summary}>{data.story?.summary}</Text>
-      <View style={styles.divider} />
-      {data.story?.text ? (
-        <Text style={styles.text}>{data.story?.text}</Text>
-      ) : (
-        <ActivityIndicator color="indigo" size={50} />
-      )}
-      <View style={styles.divider} />
-      <Text style={styles.author}>{data.story?.author}</Text>
+      <SafeAreaView>
+        <Text style={styles.summary}>{data.story?.summary}</Text>
+        {data.story?.text ? (
+          <>
+            <View style={styles.divider} />
+            <Text style={styles.text}>{data.story?.text}</Text>
+            <View style={styles.divider} />
+            <Text style={styles.author}>{data.story?.author}</Text>
+          </>
+        ) : (
+          <>
+            <View style={styles.divider} />
+            {isConnected === false ? (
+              <Text style={{ ...styles.text, textAlign: 'center' }}>
+                No text data
+              </Text>
+            ) : (
+              <ActivityIndicator color="indigo" />
+            )}
+          </>
+        )}
+      </SafeAreaView>
     </ScrollView>
   );
 };
@@ -77,7 +92,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontSize: 16,
     color: 'grey',
-    marginBottom: 20,
   },
   summary: {
     fontSize: 20,

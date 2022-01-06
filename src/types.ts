@@ -8,4 +8,5 @@ export type RootStackParamsList = {
 export type BottomTabsParamsList = {
   Stories: undefined;
   Bookmarks: undefined;
+  Debug: undefined;
 };

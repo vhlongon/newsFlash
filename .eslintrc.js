@@ -7,4 +7,12 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': ['error'],
   },
+  overrides: [
+    {
+      files: ['src/**/*'],
+      rules: {
+        'react-native/no-inline-styles': 'off',
+      },
+    },
+  ],
 };

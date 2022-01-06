@@ -30,7 +30,7 @@ const StoriesScreen = () => {
   if (error) {
     return (
       <View style={styles.container}>
-        <Text>{error.message}</Text>
+        <Text style={styles.errorText}>{error.message}</Text>
       </View>
     );
   }
@@ -38,7 +38,7 @@ const StoriesScreen = () => {
   if (!data || data?.stories?.length === 0) {
     return (
       <View style={styles.container}>
-        <Text>No data</Text>
+        <Text style={styles.text}>No stories</Text>
       </View>
     );
   }
@@ -60,7 +60,6 @@ const StoriesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -69,6 +68,13 @@ const styles = StyleSheet.create({
   },
   flatList: {
     paddingHorizontal: 20,
+    backgroundColor: '#fff',
+  },
+  text: {
+    color: 'black',
+  },
+  errorText: {
+    color: 'red',
   },
   separator: {
     height: 1,
