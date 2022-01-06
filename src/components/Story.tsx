@@ -3,11 +3,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { CombinedError } from 'urql';
 import {
   StorySummaryFieldsFragment,
   useAddBookmarkMutation,
@@ -15,18 +17,52 @@ import {
 } from '../graphql/generated/graphql-types';
 import { RootStackParamsList } from '../types';
 
+type Cta = 'add' | 'remove';
+
 interface Props extends StorySummaryFieldsFragment {
-  cta: 'add' | 'remove';
+  cta: Cta;
 }
+
+const handleMessageError = (type: Cta, error: CombinedError) => {
+  const isOffline = error?.message?.includes('You are offline');
+
+  if (isOffline) {
+    const message = `Please connect to the internet to ${type} history to your bookmarks`;
+    Alert.alert('You are offline', message);
+  } else {
+    Alert.alert('An error ocurred', error.message);
+  }
+};
+
 const Story = ({ id, title, summary, bookmarkId, cta }: Props) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamsList>>();
 
-  const [{ fetching: isAddingBookmark }, addBookmark] =
+  const [{ fetching: isAddingBookmark, error: addBookmarkError }, addBookmark] =
     useAddBookmarkMutation();
 
-  const [{ fetching: isRemovingBookmark }, removeBookmark] =
-    useRemoveBookmarkMutation();
+  const [
+    { fetching: isRemovingBookmark, error: removeBookmarkError },
+    removeBookmark,
+  ] = useRemoveBookmarkMutation();
+
+  const handleAddBookmark = async () => {
+    const result = await addBookmark({ storyId: id });
+
+    if (result.error) {
+      handleMessageError('add', result.error);
+    }
+  };
+
+  const handleRemoveBookmark = async () => {
+    if (bookmarkId) {
+      const result = await removeBookmark({ bookmarkId });
+
+      if (result.error) {
+        handleMessageError('remove', result.error);
+      }
+    }
+  };
 
   return (
     <Pressable
@@ -41,22 +77,17 @@ const Story = ({ id, title, summary, bookmarkId, cta }: Props) => {
           {title} {bookmarkId ? '🔖' : ''}
         </Text>
         {!bookmarkId && !isAddingBookmark && cta === 'add' && (
-          <Pressable
-            onPress={() => {
-              addBookmark({ storyId: id });
-            }}>
+          <Pressable onPress={handleAddBookmark}>
             <Text style={styles.cta}>Add </Text>
           </Pressable>
         )}
         {bookmarkId && !isRemovingBookmark && cta === 'remove' && (
-          <Pressable
-            onPress={() => {
-              removeBookmark({ bookmarkId });
-            }}>
+          <Pressable onPress={handleRemoveBookmark}>
             <Text style={styles.cta}>Remove</Text>
           </Pressable>
         )}
-        {(isAddingBookmark || isRemovingBookmark) && (
+        {((isAddingBookmark && !addBookmarkError) ||
+          (isRemovingBookmark && !removeBookmarkError)) && (
           <ActivityIndicator color="indigo" />
         )}
       </View>
