@@ -27,7 +27,9 @@ const handleMessageError = (type: Cta, error: CombinedError) => {
   const isOffline = error?.message?.includes('You are offline');
 
   if (isOffline) {
-    const message = `Please connect to the internet to ${type} history to your bookmarks`;
+    const message = `Please connect to the internet to ${type} history ${
+      type === 'add' ? 'to' : 'from'
+    } your bookmarks`;
     Alert.alert('You are offline', message);
   } else {
     Alert.alert('An error ocurred', error.message);
