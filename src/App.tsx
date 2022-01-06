@@ -18,7 +18,7 @@ import {
   AllBookmarksQuery,
   RemoveBookmarkMutation,
   RemoveBookmarkMutationVariables,
-  _,
+  StoryBookMarkFragment,
 } from './graphql/generated/graphql-types';
 
 const url =
@@ -80,7 +80,7 @@ const clientCache = cacheExchange({
           );
 
           if (storyId) {
-            cache.writeFragment(_, {
+            cache.writeFragment(StoryBookMarkFragment, {
               id: storyId,
               bookmarkId: null,
             });

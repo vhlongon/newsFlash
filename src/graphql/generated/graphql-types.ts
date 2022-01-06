@@ -70,8 +70,8 @@ export const StorySummaryFieldsFragmentDoc = gql`
     bookmarkId
   }
 `;
-export const _FragmentDoc = gql`
-  fragment _ on Story {
+export const StoryBookMarkFragmentFragmentDoc = gql`
+  fragment StoryBookMarkFragment on Story {
     id
     bookmarkId
   }
@@ -213,7 +213,7 @@ export type StorySummaryFieldsFragment = {
   bookmarkId?: string | null | undefined;
 };
 
-export type _Fragment = {
+export type StoryBookMarkFragmentFragment = {
   __typename?: 'Story';
   id: string;
   bookmarkId?: string | null | undefined;
@@ -272,8 +272,8 @@ export const StorySummaryFields = gql`
     bookmarkId
   }
 `;
-export const _ = gql`
-  fragment _ on Story {
+export const StoryBookMarkFragment = gql`
+  fragment StoryBookMarkFragment on Story {
     id
     bookmarkId
   }

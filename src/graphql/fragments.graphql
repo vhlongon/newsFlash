@@ -5,7 +5,7 @@ fragment StorySummaryFields on Story {
   bookmarkId
 }
 
-fragment _ on Story {
+fragment StoryBookMarkFragment on Story {
   id
   bookmarkId
 }
