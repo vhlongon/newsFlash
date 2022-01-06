@@ -22,7 +22,7 @@ const StoriesScreen = () => {
   if (fetching && !isRefreshing) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color="darkgrey" />
+        <ActivityIndicator color="indigo" />
       </View>
     );
   }
@@ -35,10 +35,10 @@ const StoriesScreen = () => {
     );
   }
 
-  if (!data) {
+  if (!data || data?.stories?.length === 0) {
     return (
       <View style={styles.container}>
-        <Text>No data</Text>;
+        <Text>No data</Text>
       </View>
     );
   }
@@ -52,9 +52,7 @@ const StoriesScreen = () => {
       data={data.stories}
       keyExtractor={item => item.id}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      renderItem={({ item }) => (
-        <Story id={item.id} title={item.title} summary={item.summary} />
-      )}
+      renderItem={({ item }) => <Story {...item} />}
     />
   );
 };
@@ -71,7 +69,6 @@ const styles = StyleSheet.create({
   },
   flatList: {
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
   },
   separator: {
     height: 1,

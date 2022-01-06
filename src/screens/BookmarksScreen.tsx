@@ -22,7 +22,7 @@ const BookmarksScreen = () => {
   if (fetching && !isRefreshing) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color="darkgrey" />
+        <ActivityIndicator color="indigo" />
       </View>
     );
   }
@@ -35,15 +35,13 @@ const BookmarksScreen = () => {
     );
   }
 
-  if (!data) {
+  if (!data || data?.bookmarks?.length === 0) {
     return (
       <View style={styles.container}>
-        <Text>No data</Text>;
+        <Text>No bookmarks</Text>
       </View>
     );
   }
-
-  console.log(data.bookmarks);
 
   return (
     <View style={styles.container}>
@@ -55,13 +53,7 @@ const BookmarksScreen = () => {
         data={data.bookmarks}
         keyExtractor={item => item.id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        renderItem={({ item }) => (
-          <Story
-            id={item.id}
-            title={item.story.title}
-            summary={item.story.summary}
-          />
-        )}
+        renderItem={({ item }) => <Story {...item.story} />}
       />
     </View>
   );
@@ -70,13 +62,11 @@ const BookmarksScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
   flatListContainer: {
     paddingVertical: 20,
-    backgroundColor: '#fff',
   },
   flatList: {
     paddingHorizontal: 20,

@@ -21,7 +21,7 @@ const StoryDetailsModalScreen = () => {
   if (fetching) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator color="darkgrey" />
+        <ActivityIndicator color="indigo" />
       </View>
     );
   }
@@ -37,7 +37,7 @@ const StoryDetailsModalScreen = () => {
   if (!data) {
     return (
       <View style={styles.container}>
-        <Text>No data</Text>;
+        <Text>No data</Text>
       </View>
     );
   }
@@ -49,7 +49,7 @@ const StoryDetailsModalScreen = () => {
       {data.story?.text ? (
         <Text style={styles.text}>{data.story?.text}</Text>
       ) : (
-        <ActivityIndicator color="darkgrey" size={50} />
+        <ActivityIndicator color="indigo" size={50} />
       )}
       <View style={styles.divider} />
       <Text style={styles.author}>{data.story?.author}</Text>
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     padding: 20,
+    backgroundColor: '#fff',
   },
   author: {
     fontStyle: 'italic',
@@ -82,12 +83,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 20,
     lineHeight: 24,
+    color: 'grey',
     textAlign: 'justify',
   },
   text: {
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'justify',
+    color: 'grey',
   },
 });
 

@@ -67,8 +67,26 @@ export const StorySummaryFieldsFragmentDoc = gql`
     summary
     title
     id
+    bookmarkId
   }
 `;
+export const AddBookmarkDocument = gql`
+  mutation AddBookmark($storyId: ID!) {
+    addBookmark(storyId: $storyId) {
+      id
+      story {
+        ...StorySummaryFields
+      }
+    }
+  }
+  ${StorySummaryFieldsFragmentDoc}
+`;
+
+export function useAddBookmarkMutation() {
+  return Urql.useMutation<AddBookmarkMutation, AddBookmarkMutationVariables>(
+    AddBookmarkDocument,
+  );
+}
 export const AllBookmarksDocument = gql`
   query AllBookmarks {
     bookmarks {
@@ -127,6 +145,28 @@ export function useStoryByIdQuery(
     ...options,
   });
 }
+export type AddBookmarkMutationVariables = Exact<{
+  storyId: Scalars['ID'];
+}>;
+
+export type AddBookmarkMutation = {
+  __typename?: 'Mutation';
+  addBookmark?:
+    | {
+        __typename?: 'Bookmark';
+        id: string;
+        story: {
+          __typename?: 'Story';
+          summary: string;
+          title: string;
+          id: string;
+          bookmarkId?: string | null | undefined;
+        };
+      }
+    | null
+    | undefined;
+};
+
 export type AllBookmarksQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllBookmarksQuery = {
@@ -140,6 +180,7 @@ export type AllBookmarksQuery = {
           summary: string;
           title: string;
           id: string;
+          bookmarkId?: string | null | undefined;
         };
       }>
     | null
@@ -151,6 +192,7 @@ export type StorySummaryFieldsFragment = {
   summary: string;
   title: string;
   id: string;
+  bookmarkId?: string | null | undefined;
 };
 
 export type AllStoriesQueryVariables = Exact<{ [key: string]: never }>;
@@ -163,6 +205,7 @@ export type AllStoriesQuery = {
         summary: string;
         title: string;
         id: string;
+        bookmarkId?: string | null | undefined;
       }>
     | null
     | undefined;
@@ -193,7 +236,19 @@ export const StorySummaryFields = gql`
     summary
     title
     id
+    bookmarkId
   }
+`;
+export const AddBookmark = gql`
+  mutation AddBookmark($storyId: ID!) {
+    addBookmark(storyId: $storyId) {
+      id
+      story {
+        ...StorySummaryFields
+      }
+    }
+  }
+  ${StorySummaryFields}
 `;
 export const AllBookmarks = gql`
   query AllBookmarks {

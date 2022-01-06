@@ -1,0 +1,8 @@
+mutation AddBookmark($storyId: ID!) {
+  addBookmark(storyId: $storyId) {
+    id
+    story {
+      ...StorySummaryFields
+    }
+  }
+}
